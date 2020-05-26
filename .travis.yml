@@ -1,0 +1,32 @@
+language: generic
+dist: trusty
+os: linux
+
+cache:
+  directories:
+    - $HOME/.ccache
+
+notifications:
+  email:
+    on_failure: always
+env:
+  global:
+    - AFTER_SCRIPT='apt list --installed | grep "^ros-"'
+    - CCACHE_DIR=$HOME/.ccache
+    - ROS_DISTRO="melodic"
+    - CATKIN_LINT=true
+    - CATKIN_LINT_ARGS='--strict'
+    - ADDITIONAL_DEBS="clang-tidy libclang-dev"
+  matrix:
+    - ROS_REPO="testing"
+      CATKIN_LINT=false NOT_TEST_BUILD=true
+      AFTER_SCRIPT="check_coverage foo bar"
+matrix:
+  allow_failures:
+    - env: ROS_REPO=main
+install:
+  - git clone --depth=1 --branch master https://github.com/ros-industrial/industrial_ci.git .industrial_ci
+  - git clone --depth=1 --branch develop https://github.com/agutenkunst/industrial_ci_addons.git .industrial_ci_addons
+script:
+  - source .industrial_ci_addons/coverage.sh
+  - .industrial_ci/travis.sh
