@@ -20,7 +20,7 @@ env:
   matrix:
     - ROS_REPO="testing"
       CATKIN_LINT=false NOT_TEST_BUILD=true
-      AFTER_SCRIPT="tree -L 4 ~/ici && check_coverage foo bar"
+      AFTER_SCRIPT="tree -L 4 /root/ici && source /root/ici/industrial_ci_addons/coverage.sh && check_coverage foo bar"
 matrix:
   allow_failures:
     - env: ROS_REPO=main
